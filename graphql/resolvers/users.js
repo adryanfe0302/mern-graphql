@@ -14,7 +14,18 @@ function generateToken(user) {
 } 
 
 module.exports = {
+    Query: {
+        async getUsers() {
+            try {
+                const users = await User.find()
+                return users
+            } catch(err){
+                throw new Error(err)
+            }
+        }
+    },
     Mutation: {
+        // login
         async login(_, {
             username,
             password
@@ -40,7 +51,8 @@ module.exports = {
                 token
             }
         },
-        
+
+        //register
         async register(_, { registerInput : {
             username,
             email,
