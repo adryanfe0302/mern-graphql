@@ -49,17 +49,20 @@ module.exports = {
             const post = await Post.findById(postId)
             // console.log('user', post)
             if (post){
-                if(post.username === username){
-                    post.likes.unshift({
+                if(post.likes.find((like) => like.username === username)){
+                    //already liked, unlike it !
+                    post.likes = post.likes.filter((like) => like.username !== username)
+                } else {
+                    // like it!
+                    post.likes.push({
                         username,
                         createdAt: new Date().toISOString()
                     })
-                    await post.save()
-                    return post
                 }
-                throw new AuthenticationError('Action not allowed')
+                await post.save()
+                return post
             }
-            throw new Error('Cannot be like')
+            throw UserInputError('Post notfound')
         }
     }
 }
