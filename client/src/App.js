@@ -6,7 +6,7 @@ import AuthRoute from './util/AuthRoute'
 import Home from '../src/pages/Home'
 import Login from '../src/pages/Login'
 import Register from '../src/pages/Register'
-import MenuBar from '../src/component/MenuBar'
+import MenuBar from './components/MenuBar'
 
 //css
 import 'semantic-ui-css/semantic.min.css'
