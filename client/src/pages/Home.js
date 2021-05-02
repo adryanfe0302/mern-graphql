@@ -1,54 +1,44 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import { Grid } from 'semantic-ui-react'
 import PostCard from '../component/Postcard'
+import { AuthContext } from '../context/auth'
+import PostForm from '../component/Postform'
+import { FETCH_POSTS_QUERY } from '../util/graphql'
 
-const Home = () => {
+function Home() {
+    const { user } = useContext(AuthContext)
     const { 
         loading, 
         data
-    } = useQuery(FETCH_POST_QUERY)
+    } = useQuery(FETCH_POSTS_QUERY)
     const posts = !loading && data.getPosts
    
-    return <Grid columns={3}>
-        <Grid.Row className='page-title'>
-            <h1> Recent Post </h1>
-        </Grid.Row>
-        <Grid.Row>
-        {loading ? <h2> loading post... </h2> : (
-            posts && posts.map((post) => (
-                <Grid.Column key={post.id} style={{marginBottom: '30px'}}>
-                    <PostCard post={post} />
-                </Grid.Column>
-            ))
+    return (
+        <Grid columns={3}>
+          <Grid.Row className="page-title">
+            <h1>Recent Posts</h1>
+          </Grid.Row>
+          <Grid.Row>
+            {user && (
+              <Grid.Column>
+                <PostForm />
+              </Grid.Column>
             )}
-            </Grid.Row>
-    </Grid>
-}
-
-const FETCH_POST_QUERY = gql`
-{
-    getPosts{
-        id 
-        body 
-        createdAt 
-        username
-        comments {
-            id 
-            body 
-            username 
-            createdAt
-        }
-        likes {
-            id 
-            username
-            createdAt
-        }
-        likeCount
-        commentCount
+            {loading ? (
+              <h1>Loading posts..</h1>
+            ) : (
+              posts &&
+              posts.map((post) => (
+                <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
+                  <PostCard post={post} />
+                </Grid.Column>
+              ))
+            )}
+          </Grid.Row>
+        </Grid>
+      );
     }
-}
-`
+
 
 export default Home
